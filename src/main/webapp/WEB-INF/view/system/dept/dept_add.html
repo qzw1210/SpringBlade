@@ -1,0 +1,33 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form data-url="${ctxPath}/${code}/save" method="post" class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _table="tfw_dept";
+		@ var _col=[
+		@			  {name:"排序",index:"num",type:"text",newline:true,length:3,required:"required"},
+		@			  {name:"上级部门",index:"pid", type:"selectDept",value:pId!,newline:false,length:3},
+		@			  {name:"部门简称",index:"simplename", type:"text",newline:true,length:3,required:"required"},
+		@			  {name:"部门全称",index:"fullname", type:"text",newline:false,length:3,required:"required"},
+		@			  {name:"备注",index:"tips", type:"text",newline:true,length:8}
+		@		   ];
+		@ include("/common/_curd/_add.html",{"col":_col,"table":_table}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_save:"新增",btn_close:"关闭"}) {}
+		
+
+	</form>
+	
+	<script type="text/javascript">
+		$(function(){
+			if("${pId!}"!=""&&"${num!}"!=""){
+				$("#_num").val("${num!}");
+				$("#_simplename").focus();
+			}
+			$("#btn_save").bind("click",function(){
+				setTimeout(function(){parent.initZtree();}, 499);
+			});
+		});
+	</script>
+	
+@}

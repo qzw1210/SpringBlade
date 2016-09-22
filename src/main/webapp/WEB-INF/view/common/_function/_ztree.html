@@ -1,0 +1,135 @@
+@layout("/common/_curd/_container.html"){
+
+
+<script type="text/javascript">
+
+	$(function(){
+		var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+		$("#btn_close").bind("click",function(){
+			parent.layer.close(index);
+		});
+		$("#btn_save").bind("click",function(){
+			var zTree = $.fn.zTree.getZTreeObj("zTree");
+			var nodes = zTree.getCheckedNodes();
+			var ids = "";
+			var names = "";
+			for (var i=0, l=nodes.length; i<l; i++) {
+				@ if(func.like(type,"dict_")){
+					ids += "," + nodes[i].num;
+				@ } else {
+					ids += "," + nodes[i].id;
+				@ }
+				names += "," + nodes[i].name;
+			}
+			ids = ids.substring(1);
+			names = names.substring(1);
+			
+			/* if(ids.length == 0){
+				layer.msg("选项不能为空", {shift: 6});
+				return false;
+			} */
+
+			var _pobj = parent.$("#${index!}").attr("name");
+			if (_pobj != undefined){
+				var _name = _pobj.replace("token_", "");
+				parent.$("#${index!}").attr("name", _name);
+				parent.$("#form_token").val(1);
+			}
+			
+			parent.$("#${index!}_INPUT").val(names);
+			parent.$("#${index!}").val(ids);
+			parent.layer.close(index);
+		
+		});
+		
+		initZtree();
+	});
+	
+	function initZtree(){
+		var setting = {
+				check: {
+					enable: true,
+					@ if(check! == "radio"){
+						chkStyle: "radio",
+						radioType : "all"
+					@ } else{
+						chkboxType :{ "Y" : "", "N" : "" }
+					@ }
+				},
+				data: {
+					simpleData: {
+						enable: true
+					}
+				}
+			};
+		
+		
+		
+		$.post("${ctxPath}/ztree/getTreeList",{source:"${source!}", type:"${type!}", where:"${where!}", intercept:"${x.intercept!}", ext:"${x.ext!}", val:"${val!}"},function(data){
+			if(data.code===0){
+				$.fn.zTree.init($("#zTree"), setting, data.data);
+				/* var val = "${val!0}";
+				if(val == "0"){
+					return;
+				}
+				var arr = val.split(",");
+				var zTree = $.fn.zTree.getZTreeObj("zTree");
+				for (var i = 0; i < arr.length; i++){
+					var node = zTree.getNodeByParam(("${type!0}".indexOf("dict") >= 0) ? "num" : "id", arr[i]);
+					node.checked = true;
+					zTree.updateNode(node);
+				} */
+			}
+			else{
+				layer_alert("数据加载失败", "error");
+			}
+		}, "json");
+	}
+	
+
+	
+	
+</script>
+
+
+	<!-- 配置grid -->
+	<div class="row">
+		<div class="col-sm-1"></div>
+		<div class="col-sm-10">
+			<div class="widget-box widget-color-blue2">
+				<div class="widget-header">
+					<h4 class="widget-title lighter smaller">${name!}</h4>
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-main padding-8">
+						<ul id="zTree" class="ztree"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-1"></div>
+	</div>
+	
+	<div class="clearfix form-actions center">
+		<div class="col-md-offset-1 col-md-10">
+		  	<button class="btn btn-sm btn-info" type="button" id="btn_save">
+				<i class="ace-icon fa fa-check bigger-110"></i>
+				确定
+			</button>
+
+			&nbsp; &nbsp; &nbsp;
+			<button class="btn btn-sm" type="button" id="btn_close">
+				<i class="ace-icon fa fa-close bigger-110"></i>
+				关闭
+			</button>
+		</div>
+	</div>
+
+	
+	
+	<!-- 引入所需js -->
+	<link rel="stylesheet" href="${ctxPath}/static/zTree/css/zTreeStyle/zTreeStyle.css" />
+	<script src="${ctxPath}/static/zTree/js/jquery.ztree.core.js" type="text/javascript" ></script>
+	<script src="${ctxPath}/static/zTree/js/jquery.ztree.excheck.js" type="text/javascript"></script>
+@}	

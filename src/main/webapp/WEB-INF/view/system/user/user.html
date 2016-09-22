@@ -1,0 +1,113 @@
+@layout("/common/_curd/_container.html"){
+<script type="text/javascript">
+	var ctx="${ctxPath}";
+	var grid_selector = "#grid-table";
+	var pager_selector = "#grid-pager";
+	var export_source = "userMapper.oraclelist";
+	if("${func.isMySql()}" == "true"){
+		export_source = "userMapper.mysqllist";
+	}
+	
+	$(function(){
+		initGrid();
+		initZtree();
+		initMenuBtn("btns","${code}");
+	});
+	
+	function initGrid(){
+		var grid_url = ctx+"/${code}/list";//查询列表接口
+		var _colnames=[ "序列","账户", "姓名","性别","角色ID","角色","部门", "邮箱","电话","创建时间","状态"];
+		var _colmodel=[   {name:"ID",index:"ID", width:80,hidden:true},
+						  {name:"ACCOUNT",index:"ACCOUNT", width:80},
+						  {name:"NAME",index:"NAME", width:80},
+						  {name:"SEXNAME",index:"SEX", width:50},
+						  {name:"ROLEID",index:"ROLEID", width:50,hidden:true},
+						  {name:"ROLENAME",index:"ROLEID", width:150},
+						  {name:"DEPTNAME",index:"DEPTID", width:50},
+						  {name:"EMAIL",index:"EMAIL", width:120},
+						  {name:"PHONE",index:"PHONE", width:100},
+						  {name:"CREATETIME",index:"CREATETIME", width:100},
+						  {name:"STATUSNAME",index:"STATUS", width:50}
+						];
+		
+		jQuery(grid_selector).jqGrid({
+			url:grid_url,
+			//caption: "用户管理",
+		    shrinkToFit:true,//适用于较少字段,响应式
+			colNames:_colnames,
+			colModel:_colmodel, 
+			jsonReader:{id:"ID"},
+			pager : pager_selector,
+			postData: { sort: "status asc, account", order: "asc"}
+		});
+		
+
+	}
+	
+	
+	function initZtree(){
+		var setting = {
+				data: {
+					simpleData: {
+						enable: true
+					}
+				}
+			};
+		
+		var ajax = new $ax("${ctxPath}/user/userTreeList", function(data){
+			if(data.code === 0){
+				$.fn.zTree.init($("#zTree"), setting, data.data);
+			}
+			else{
+				layer_alert("数据加载失败", "error");
+			}
+		});
+		ajax.start();
+	}
+	
+</script>
+
+
+	<!-- 配置grid -->
+	<div class="row">
+		<div class="col-sm-3">
+			<div class="widget-box widget-color-blue2">
+				<div class="widget-header">
+					<h4 class="widget-title lighter smaller">部门组织架构</h4>
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-main padding-8">
+						<ul id="zTree" class="ztree"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-9 tb-grid">
+			<!-- 配置查询 -->
+			@ var _col=[
+			@		  	{name:"账户",index:"ACCOUNT",type:"text"},
+			@		  	{name:"姓名",index:"NAME",type:"text"},
+			@		  	{name:"性别",index:"SEX",type:"select_101"},
+			@		 	{name:"邮箱",index:"EMAIL",type:"text"},
+			@		  	{name:"电话",index:"PHONE",type:"text"},
+			@			{name:"状态",index:"STATUS",type:"select_901"}
+			@		   ];
+			@ include("/common/_function/_search.html",{"col":_col}){}
+			<!-- 按钮组 -->
+			<div class="welljq well-sm" id="btns"></div>
+			<!-- grid -->
+			<table id="grid-table"></table>
+			<!-- 分页 -->
+			<div id="grid-pager"></div>
+		</div>
+	</div>
+	
+	<!-- 引入列表页所需js -->
+	@include("/common/_listscript.html"){}
+	<link rel="stylesheet" href="${ctxPath}/static/zTree/css/zTreeStyle/zTreeStyle.css" />
+	<script src="${ctxPath}/static/zTree/js/jquery.ztree.core.js" type="text/javascript" ></script>
+	<style type="text/css">
+		.ztree li span.button.iconPerson_ico_docu{margin-right:2px; background: url(${ctxPath}/static/zTree/img/person.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+	</style>
+@}	

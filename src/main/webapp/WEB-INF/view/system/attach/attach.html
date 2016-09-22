@@ -1,0 +1,67 @@
+@layout("/common/_curd/_container.html"){
+
+
+<script type="text/javascript">
+	var ctx="${ctxPath}";
+	var grid_selector = "#grid-table";
+	var pager_selector = "#grid-pager";
+	
+	$(function(){
+		initGrid();
+		initMenuBtn("btns","${code}");
+		
+	});
+	
+	function initGrid(){
+		var grid_url = ctx+"/${code}/list";//查询列表接口
+		var _colnames=[ "序列","名称", "地址","编号","状态","创建人","创建时间"];
+		var _colmodel=[   {name:"ID",index:"ID", width:80,hidden:true},
+						  {name:"NAME",index:"NAME", width:150},
+						  {name:"ATTACHURL",index:"URL", width:200},
+						  {name:"CODE",index:"CODE", width:60},
+						  {name:"STATUSNAME",index:"STATUS", width:50},
+						  {name:"CREATERNAME",index:"CREATER", width:60},
+						  {name:"CREATETIME",index:"CREATETIME", width:100}
+						];
+		
+		jQuery(grid_selector).jqGrid({
+			url:grid_url,
+		    shrinkToFit:true,//适用于较少字段,响应式
+			colNames:_colnames,
+			colModel:_colmodel, 
+			jsonReader:{id:"ID"},
+			pager : pager_selector,
+			postData: {sort: "id", order: "desc"}
+		});
+		
+
+	}
+	
+</script>
+
+
+	<!-- 配置grid -->
+	<div class="row">
+		<div class="col-xs-12 tb-grid">
+			<!-- 配置查询 -->
+			@ var _col=[
+			@			  {name:"编号",index:"CODE", type:"text"},
+			@			  {name:"名称",index:"NAME", type:"text"},
+			@			  {name:"地址",index:"URL", type:"text"},
+			@			  {name:"状态",index:"STATUS", type:"select_902"},
+			@			  {name:"创建人",index:"CREATER", type:"selectUser"},
+			@			  {name:"创建时间",index:"CREATETIME", type:"text"}
+			@		   ];
+			@ include("/common/_function/_search.html",{"col":_col}){}
+			<!-- 按钮组 -->
+			<div class="welljq well-sm" id="btns"></div>
+			<!-- grid -->
+			<table id="grid-table"></table>
+			<!-- 分页 -->
+			<div id="grid-pager"></div>
+		</div>
+	</div>
+	
+	<!-- 引入列表页所需js -->
+	@include("/common/_listscript.html"){}
+@}	

@@ -1,0 +1,117 @@
+	<script type="text/javascript">
+	$("#_name").bind("blur", function () {
+	    var _icon = "btn btn-xs btn-white | fa fa-spinner bigger-120";
+	    var _url = "";
+	    var _path = "";
+	    var _code = "";
+	    var _name = "/" + $("#_pcode").val().split("_")[0];
+	    var _alias = "";
+	    var ischecked = false;
+	    if ($("#istemplate_chb").is(":checked")) {
+	        ischecked = true;
+	    }
+	    if (this.value.indexOf("新增") >= 0) {
+	        _icon = "btn btn-xs btn-white | fa fa-floppy-o bigger-120";
+	        _url = _name + "/add";
+	        _path = _name.split("/")[1] + "_add.html";
+	        _code = _name.split("/")[1] + "_add";
+	        if (ischecked) {
+	            _url = "/template/add" + _name;
+	            _path = "template_add.html";
+	        }
+	        _alias = "add";
+	    }
+	    else if (this.value == "修改") {
+	        _icon = "btn btn-xs btn-white | fa fa-pencil  bigger-120";
+	        _url = _name + "/edit";
+	        _path = _name.split("/")[1] + "_edit.html";
+	        _code = _name.split("/")[1] + "_edit";
+	        if (ischecked) {
+	            _url = "/template/edit" + _name + "-?";
+	            _path = "template_edit.html";
+	        }
+	        _alias = "edit";
+	    }
+	    else if (this.value == "删除") {
+	        _icon = "btn btn-xs btn-white | fa fa-times  bigger-120";
+	        _url = _name + "/remove";
+	        _code = _name.split("/")[1] + "_remove";
+	        if (ischecked) {
+	            _url = "/template/remove" + _name;
+	        }
+	        _alias = "remove";
+	    }
+	    else if (this.value == "查看") {
+	        _icon = "btn btn-xs btn-white | fa fa-eye bigger-120";
+	        _url = _name + "/view";
+	        _path = _name.split("/")[1] + "_view.html";
+	        _code = _name.split("/")[1] + "_view";
+	        if (ischecked) {
+	            _url = "/template/view" + _name + "-?";
+	            _path = "template_view.html";
+	        }
+	        _alias = "view";
+	    }
+	    else if (this.value == "重置密码") {
+	        _icon = "btn btn-xs btn-white | fa fa-key  bigger-120";
+	        _url = _name + "/reset";
+	        _alias = "reset";
+	    }
+	    else if (this.value == "冻结") {
+	        _icon = "btn btn-xs btn-white | fa fa-ban  bigger-120";
+	        _url = _name + "/ban";
+	        _alias = "frozen";
+	    }
+	    else if (this.value == "审核") {
+	        _icon = "btn btn-xs btn-white | fa fa-user  bigger-120";
+	        _url = "{\"status\":\"3\"}";
+	        _path = _name.split("/")[1] + "_audit.html";
+	        _code = _name.split("/")[1] + "_audit";
+	        _alias = "audit";
+	    }
+	    else if (this.value == "通过") {
+	        _icon = "btn btn-xs btn-white | fa fa-check  bigger-120";
+	        _url = _name + "/auditOk";
+	        _code = _name.split("/")[1] + "_audit_ok";
+	        _alias = "ok";
+	    }
+	    else if (this.value == "拒绝") {
+	        _icon = "btn btn-xs btn-white  btn-danger | fa fa fa-times bigger-120";
+	        _url = _name + "/auditRefuse";
+	        _code = _name.split("/")[1] + "_audit_refuse";
+	        _alias = "refuse";
+	    }
+	    else if (this.value == "回收站") {
+	        _icon = "btn btn-xs btn-white | fa fa-recycle  bigger-120";
+	        _url = "{\"status\":\"5\"}";
+	        _path = _name.split("/")[1] + "_recycle.html";
+	        _code = _name.split("/")[1] + "_recycle";
+	        _alias = "recycle";
+	    }
+	    else if (this.value == "还原") {
+	        _icon = "btn btn-xs btn-white | fa fa-refresh  bigger-120";
+	        _url = _name + "/restore";
+	        _code = _name.split("/")[1] + "_recycle_restore";
+	        _alias = "restore";
+	    }
+	    else if (this.value == "彻底删除") {
+	        _icon = "btn btn-xs btn-white  btn-danger | fa fa fa-times bigger-120";
+	        _url = _name + "/remove";
+	        _code = _name.split("/")[1] + "_recycle_remove";
+	        _alias = "remove";
+	    }
+	    else if (this.value == "返回") {
+	        _icon = "btn btn-xs btn-white | fa fa-undo  bigger-120";
+	        _url = "";
+	        _alias = "back";
+	    }
+	    if (_url != "" || this.value == "返回") {
+	        $("#_code").val(_code);
+	        $("#_icon").val(_icon);
+	        $("#_url").val(_url);
+	        $("#_path").val(_path);
+	        $("#_alias").val(_alias);
+	    }
+
+	});
+	</script>

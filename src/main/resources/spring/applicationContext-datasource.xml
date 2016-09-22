@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.3.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.3.xsd ">
+
+	<!-- 连接池配置文件 -->
+	<context:property-placeholder location="classpath:config.properties" />
+	
+	<!-- base dataSource -->
+	<bean id="baseDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${druid.initialSize}" />
+		<property name="maxActive" value="${druid.maxActive}" />
+		<property name="minIdle" value="${druid.minIdle}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="${druid.maxWait}" />
+
+		<!-- 用来检测连接是否有效的sql,要求是一个查询语句 -->
+		<property name="validationQuery" value="SELECT 'x' from dual" />
+		
+		<!-- 申请连接的时候检测，如果空闲时间大于 -->
+		<!-- 建议配置为true,不影响性能,并且保证安全性 -->
+		<property name="testWhileIdle" value="true" />
+		
+		<!-- 申请连接时执行validationQuery检测连接是否有效,做了这个配置会降低性能 -->
+		<property name="testOnBorrow" value="false" />
+		
+		<!-- 归还连接时执行validationQuery检测连接是否有效,做了这个配置会降低性能 -->
+		<property name="testOnReturn" value="false" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="600000" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<!-- 超过时间限制是否回收 --> 
+		<property name="removeAbandoned" value="true" />
+		
+		<!-- 超时时间；单位为秒。180秒=3分钟 --> 
+		<property name="removeAbandonedTimeout" value="1800" />
+		
+		<!-- 关闭abanded连接时输出错误日志 --> 
+		<property name="logAbandoned" value="false" />
+
+		<!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
+		<property name="filters" value="mergeStat" />
+	</bean>
+
+	<bean id="dataSource"  parent="baseDataSource" init-method="init">
+		<property name="driverClassName" value="${master.driver}" />
+		<property name="url" value="${master.url}" />
+		<property name="username" value="${master.username}" />
+		<property name="password" value="${master.password}" />
+	</bean>
+
+	
+	<!-- 配置 Annotation 驱动，扫描@Transactional注解的类定义事务  -->
+	<!-- <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/> -->
+    <!-- 如果 "proxy-target-class" 属值被设置为 "true"，那么基于类的代理将起作用（这时需要CGLIB库cglib.jar在CLASSPATH中）。如果 "proxy-target-class" 属值被设置为 "false" 或者这个属性被省略，那么标准的JDK基于接口的代理将起作用。 -->
+    <!-- 启用CGliB -->
+    <!-- <aop:aspectj-autoproxy proxy-target-class="true"/> -->
+
+
+	<!-- 主数据库事务配置  -->
+	
+    <!-- 事务管理配置 -->
+    <bean id="transactionManager"
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- 拦截器方式 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="list*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="get*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="find*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="query*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="save*" propagation="REQUIRED" rollback-for="RuntimeException" />
+			<tx:method name="add*" propagation="REQUIRED" rollback-for="RuntimeException" />
+			<tx:method name="create*" propagation="REQUIRED" rollback-for="RuntimeException" />
+			<tx:method name="eidt*" propagation="REQUIRED" rollback-for="RuntimeException" />
+			<tx:method name="remove*" propagation="REQUIRED" rollback-for="RuntimeException" />
+			<tx:method name="update*" propagation="REQUIRED" rollback-for="RuntimeException" />
+			<tx:method name="saveOrUpdate*" propagation="REQUIRED" rollback-for="RuntimeException" />
+			<tx:method name="delete*" propagation="REQUIRED" rollback-for="RuntimeException" />
+			<tx:method name="grant*" propagation="REQUIRED" rollback-for="RuntimeException" />
+			<tx:method name="modify*" propagation="REQUIRED" rollback-for="RuntimeException" />
+			<!-- <tx:method name="*" propagation="REQUIRED" /> -->
+		</tx:attributes>
+	</tx:advice>
+
+	
+	<!-- AOP 配置 -->
+	<aop:config>
+		<!-- 第一个*代表所有的返回值类型；第二个*代表所有的类；第三个*代表类所有方法；..代表子或者孙子包；最后一个..代表所有的参数 -->
+		<aop:pointcut id="serviceMethods" expression="execution(* com.smallchill.*..service.*.*(..))" />
+		<aop:advisor id="txAdvisor" pointcut-ref="serviceMethods" advice-ref="txAdvice" order="1" />
+	</aop:config>
+
+</beans>

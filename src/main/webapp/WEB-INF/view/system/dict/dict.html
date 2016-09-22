@@ -1,0 +1,124 @@
+@layout("/common/_curd/_container.html"){
+<script type="text/javascript">
+	var ctx="${ctxPath}";
+	var grid_selector = "#grid-table";
+	var pager_selector = "#grid-pager";
+	
+	$(function(){
+		initGrid();
+		initMenuBtn("btns","${code}");
+	});
+	
+	/**
+	*用于执行按钮加载事件结束后操作的ajax请求(否则会导致回调覆盖,也可以使用 async:false)
+	*/
+	function doOther(){
+		initZtree();
+	}
+	
+	function initGrid(){
+		var grid_url = ctx+"/${code}/list";//查询列表接口
+		var _colnames=[ "序列","字典编号", "字典序号","字典父名称", "字典名称","备注"];
+		var _colmodel=[   {name:"ID",index:"ID", width:80,hidden:true},
+						  {name:"CODE",index:"CODE", width:100},
+						  {name:"NUM",index:"NUM", width:80,align:"right"},
+						  {name:"PNAME",index:"PID", width:80,align:"right"},
+						  {name:"NAME",index:"NAME", width:250},
+						  {name:"TIPS",index:"TIPS", width:80}
+						];
+		
+		jQuery(grid_selector).jqGrid({
+			url:grid_url,
+		    shrinkToFit:true,//适用于较少字段,响应式
+			colNames:_colnames,
+			colModel:_colmodel, 
+			jsonReader:{id:"ID"},
+			pager : pager_selector,
+			postData: {sort: "code asc,num", order: "asc"}
+		});
+	}
+	
+
+	
+	function initZtree(){
+		var setting = {
+				data: {
+					simpleData: {
+						enable: true
+					}
+				},
+				callback: {
+					beforeClick: zTreeBeforeClick
+				}
+			};
+		var ajax = new $ax("${ctxPath}/cache/dicTreeList", function(data){
+			if(data.code===0){
+				$.fn.zTree.init($("#zTree"), setting, data.data);
+			}
+			else{
+				layer_alert("数据加载失败", "error");
+			}
+		});
+		ajax.start();
+	}
+	
+	function zTreeBeforeClick(treeId, treeNode, clickFlag) {
+	    var id=treeNode.id;
+	    if(id==0){
+		    exwhere="";
+		    searchGrid();
+		    return;
+	    }
+		$.post("${ctxPath}/cache/getDicById",{id:id},function(data){
+			if(data.code===0){
+				var code=data.data[0].CODE;
+			    exwhere="{\"code\":\""+code+"\"}";
+			    searchGrid();
+			}
+			else{
+				layer_alert("数据加载失败", "error");
+			}
+		}, "json");
+	};
+	
+</script>
+
+
+	<!-- 配置grid -->
+	<div class="row"> 
+		<div class="col-sm-3">
+			<div class="widget-box widget-color-blue2">
+				<div class="widget-header">
+					<h4 class="widget-title lighter smaller">字典项</h4>
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-main padding-8">
+						<ul id="zTree" class="ztree"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xs-9 tb-grid">
+			<!-- 配置查询 -->
+			@ var _col=[
+			@			  {name:"字典编号",index:"CODE", type:"text"},
+			@			  {name:"字典序号",index:"NUM", type:"text"},
+			@			  {name:"字典名称",index:"NAME", type:"text"},
+			@			  {name:"备注",index:"TIPS", type:"text"}
+			@		   ];
+			@ include("/common/_function/_search.html",{"col":_col}){}
+			<!-- 按钮组 -->
+			<div class="welljq well-sm" id="btns"></div>
+			<!-- grid -->
+			<table id="grid-table"></table>
+			<!-- 分页 -->
+			<div id="grid-pager"></div>
+		</div>
+	</div>
+	<!-- 引入列表页所需js -->
+	@include("/common/_listscript.html"){}
+	<link rel="stylesheet" href="${ctxPath}/static/zTree/css/zTreeStyle/zTreeStyle.css" />
+	<script src="${ctxPath}/static/zTree/js/jquery.ztree.core.js" type="text/javascript" ></script>
+@}	

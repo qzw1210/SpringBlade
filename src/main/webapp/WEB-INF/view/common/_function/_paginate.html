@@ -1,0 +1,64 @@
+
+@ //macro paginate currentPage totalPage actionUrl urlParas=""
+	@
+	@if (totalPage <= 0 || currentPage > totalPage) return; 
+	@var startPage = currentPage - 4;
+	@if(startPage<1){
+	@	startPage=1;
+	@}
+	@var endPage = currentPage+4;
+	@if(endPage>totalPage){
+	@	endPage = totalPage;
+	@}
+	
+<div class="page pull-right">
+	<nav>
+		<ul class="pagination">
+	@
+	@if(currentPage<=8){
+	@	startPage = 1;
+	@}
+	@if(totalPage-currentPage<8){
+	@	endPage = totalPage;
+	@}
+	@if(currentPage==1){			
+	
+	<li><a>上一页</a></li>
+	@}else{
+	<li><a href="${actionUrl}${currentPage-1}">上一页</a></li>
+	@}
+	
+	@if(currentPage>8){
+	<li><a href="${actionUrl}1${urlParas!}">1</a></li>
+	<li><a href="${actionUrl}2${urlParas!}">2</a></li>
+	<li><a>...</a></li>
+	@}
+	
+
+	@var index = startPage;	
+	@while(index<=endPage){
+	    @if(currentPage == index){
+			<li class="active"><a>${index}</a></li>
+		@}else{
+			<li><a href="${actionUrl+index}${urlParas!}">${index}</a></li>
+		@}				
+		
+
+	@index= index+1;
+	@}
+	@if((totalPage - currentPage) >= 8){
+	    <li><a>...</a></li>
+		<li><a href="${actionUrl}${totalPage - 1}${urlParas!}">${totalPage - 1}</a></li>
+		<li><a href="${actionUrl}${totalPage}${urlParas!}">${totalPage}</a></li>
+	@}
+	
+	@if(currentPage == totalPage){
+		<li><a href="${actionUrl}">下一页</a></li>
+	@}else{
+		<li><a href="${actionUrl}${currentPage + 1}${urlParas!}">下一页</a></li>
+	@}
+	
+		</ul>
+	</nav>
+</div>
+	

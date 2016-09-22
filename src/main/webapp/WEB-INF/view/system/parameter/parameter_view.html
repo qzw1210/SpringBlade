@@ -1,0 +1,17 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _col=[
+		@			  {name:"参数编号",index:"code",type:"text",newline:true,length:3,required:"required"},
+		@			  {name:"参数名称",index:"name", type:"text",newline:false,length:3,required:"required"},
+		@			  {name:"权重",index:"num", type:"number",newline:true,length:8,value:"100",required:"required min=1"},
+		@			  {name:"参数值",index:"para", type:"textarea",newline:true,height:"150px",length:8,required:"required"},
+		@			  {name:"备注",index:"tips", type:"text",newline:true,length:8}
+		@		   ];
+		@ include("/common/_curd/_view.html",{"col":_col}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_close:"关闭"}) {}
+	</form>
+@}

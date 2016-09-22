@@ -1,0 +1,116 @@
+	<div class="space-4"></div>
+		<!-- #section:elements.form -->
+			@for(x in col){
+			 @ if(!isEmpty(x.title)){
+					<div class="page-header-form">
+						<h2>
+							${x.title!}
+						@if(!isEmpty(x.small)){
+							<small>
+								<i class="ace-icon fa fa-angle-double-right">
+									${x.small!}
+								</i>
+							</small>
+						@}
+						</h2>
+					
+					</div>
+			 @ }else{
+				@	var display = (func.like(x.type,"hidden")) ? "none" : "block";
+				@   var placeholder = (!isEmpty(x.placeholder)) ? x.placeholder : ("暂无"+x.name);
+				@	if(x.newline){
+						<div class="form-group" style="display:${display!}">
+				@	}
+							<label class="col-sm-2 control-label no-padding-right" > ${x.name!} </label>			
+							<div class="col-sm-${x.length!3}">
+				@			if(x.type=="textarea"){
+								<textarea id="_${x.index!}" style="height:${x.height!'200px'}" name="${table!}.${x.index!}" disabled value="${x.value!}" placeholder="${placeholder!}" class="form-control"></textarea>
+				@			}
+				@			else if(x.type=="image"){
+								<img id="_${x.index!}"  data-type="image" data-auto="${x.auto!}" style="padding:2px; border:1px solid #ccc;cursor:pointer;width:${x.width!'168px'};height:${x.height!'110px'};" name="${table!x.table}.${x.index!}" src="${x.src!}"></img>
+				@			}
+				@			else if(x.type=="kindeditor"){
+								<blade:kindeditor x="${x}" readOnly="true" />
+				@			}
+				@			else if(x.type=="checkbox"){
+								<blade:checkbox x="${x}" disabled="disabled"/>
+				@			}
+				@			else if(x.type=="checkbox2"){
+								<blade:checkbox2 x="${x}" disabled="disabled"/>
+				@			}
+				@			else if(x.type=="imgupload"){
+								<blade:imgupload x="${x}" />
+				@			}
+				@			else if(x.type=="fileupload"){
+								<blade:fileupload x="${x}"  display="none"/>
+				@			}
+				@			else if(x.type=="hidden"){
+								<input type="hidden" id="_${x.index!}" name="${table!}.${x.index!}"  value="${x.value!}" />
+				@			}
+				@			else if(x.type=="span"){
+								<span id="_${x.index!}" class="form-control" style="border:0px;">${x.value!}</span>
+				@			}
+				@			else{
+								<input type="text" id="_${x.index!}" name="${table!}.${x.index!}" disabled value="${x.value!}" placeholder="${placeholder!}" class="form-control" />
+				@			}
+							</div>
+				@			if(x.length>=5){
+						</div>
+				@			}
+				@ 	if(!x.newline){
+					 </div>
+				@	}
+				@}
+			 @}
+			 
+			<script	type="text/javascript">
+				$(function(){
+					var _model = ${model!"'error'"};
+					if(_model == "error"){
+						layer_alert("读取数据失败!", "error");
+						return;
+					}
+					for(var x in _model){
+						var $x = $("#_" + x);
+						if(_model[x] != null && $x.attr("data-type")=="image"){
+							var src = $x.attr("data-auto") + _model[x];
+							$x.attr("src", src);
+							$x.bind("click", function(){
+								window.open($(this).attr("src"));
+							});
+						}
+						else if(_model[x] != null && $x.attr("data-type") == "imgupload"){
+							var id = _model[x];
+							initImgUpload(id, "view");
+							$x.val(id);
+						}
+						else if(_model[x] != null && $x.attr("data-type") == "fileupload"){
+							var ids = _model[x];
+							initFileUpload(ids, "view");
+							$x.val(ids);
+						}
+						else if($x.is("span")){
+							var _x = _model[x];
+							if(_x == null || _x == ""){
+								_x = "请选择";
+							}
+							$x.html(_x);
+						}
+						else if(_model[x]!=null && $("#" + x + "_chb").attr("type")=="checkbox"){
+							if(_model[x]=="1"){
+								$("#"+x+"_chb").attr("checked", "checked");
+							}
+							else{
+								$x.removeAttr("checked");
+							}
+						}
+						else {
+							$x.val(_model[x]);
+						}
+					}
+					
+				});
+			</script>
+			
+			
+	<div class="space-4"></div>

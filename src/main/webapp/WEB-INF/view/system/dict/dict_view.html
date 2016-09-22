@@ -1,0 +1,17 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _col=[
+		@			  {name:"字典编号",index:"code", type:"text",newline:true,length:8},
+		@			  {name:"字典序号",index:"num", type:"text",newline:true,length:3},
+		@			  {name:"字典父名称",index:"pName",type:"text",newline:false,length:3},
+		@			  {name:"字典名称",index:"name", type:"text",newline:true,length:8},
+		@			  {name:"备注",index:"tips", type:"text",newline:true,length:8}
+		@		   ];
+		@ include("/common/_curd/_view.html",{"col":_col}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_close:"关闭"}) {}
+	</form>
+@}

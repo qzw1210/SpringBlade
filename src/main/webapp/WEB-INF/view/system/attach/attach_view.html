@@ -1,0 +1,17 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _col=[		
+		@			  {title:"文件上传",small:"文件查看"},
+		@			  {name:"编号",index:"code", type:"text",newline:true,length:3},
+		@			  {name:"名称",index:"name", type:"text",newline:false,length:3},
+		@			  {name:"图片",index:"attachUrl", type:"image",newline:true,length:8}
+		@		   ]; 
+		@ include("/common/_curd/_view.html",{"col":_col}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_close:"关闭"}) {}
+	</form>
+
+@}

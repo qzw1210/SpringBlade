@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	http://www.springframework.org/schema/task 
+	http://www.springframework.org/schema/task/spring-task-4.3.xsd ">
+
+	<!-- 0/5 0 1 * * ? [秒] [分] [小时] [日] [月] [周] [年] -->
+	<bean id="globalTask" class="com.smallchill.common.task.GlobalTask"></bean>
+	<task:scheduled-tasks>
+		<!-- 每一分钟执行一次 -->
+		<task:scheduled ref="globalTask" method="run" cron="0 0/1 * * * ?" />
+		<!-- 早九点到晚五点每三十分钟执行一次 -->
+		<!-- <task:scheduled ref="globalTask" method="run" cron="0 0/30 9-17 * * ?" /> -->
+	</task:scheduled-tasks>
+
+
+
+</beans>

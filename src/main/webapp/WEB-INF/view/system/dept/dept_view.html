@@ -1,0 +1,17 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _col=[
+		@			  {name:"排序",index:"num",type:"text",newline:true,length:3},
+		@			  {name:"上级部门",index:"pName", type:"selectDept",newline:false,length:3},
+		@			  {name:"部门简称",index:"simplename", type:"text",newline:true,length:3},
+		@			  {name:"部门全称",index:"fullname", type:"text",newline:false,length:3},
+		@			  {name:"备注",index:"tips", type:"text",newline:true,length:8}
+		@		   ];
+		@ include("/common/_curd/_view.html",{"col":_col}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_close:"关闭"}) {}
+	</form>
+@}

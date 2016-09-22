@@ -1,0 +1,115 @@
+	<div class="space-4"></div>
+		<!-- #section:elements.form -->
+			@for(x in col){		
+			 @ if(!isEmpty(x.title)){
+					<div class="page-header-form">
+						<h2>
+							${x.title!}
+						@if(!isEmpty(x.small)){
+							<small>
+								<i class="ace-icon fa fa-angle-double-right">
+									${x.small!}
+								</i>
+							</small>
+						@}
+						</h2>
+					
+					</div>	
+			 @ }else{
+				@	var display = (func.like(x.type,"hidden")) ? "none" : "block";
+				@   var placeholder = (!isEmpty(x.placeholder)) ? x.placeholder : ("暂无"+x.name);
+				@	if(x.newline!false){
+					<div class="form-group" style="display:${display!}">
+				@	}
+							<label class="col-sm-2 control-label no-padding-right" > ${x.name!} </label>			
+							<div class="col-sm-${x.length!3}">
+				@			if(x.type=="text"||x.type=="number"||x.type=="tel"||x.type=="email"||x.type=="url"||x.type=="qq"||x.type=="unionpay"||x.type=="credit"||x.type=="idcard"){
+								<input type="${x.type!'text'}" id="_${x.index!}" name="${table!x.table}.${x.index!}" ${x.required!} ${x.disabled!} value="${x.value!}" placeholder="${placeholder!}" class="form-control" />
+				@			}
+				@			else if(func.like(x.type,"hidden")){
+								<input type="${x.type!'hidden'}" id="_${x.index!}" name="${table!x.table}.${x.index!}"  value="${x.value!}" class="form-control" />
+				@			}
+				@			else if(x.type=="textarea"){
+								<textarea id="_${x.index!}" style="height:${x.height!'200px'}" name="${table!x.table}.${x.index!}" ${x.required!} ${x.disabled!} value="${x.value!}" placeholder="${placeholder!}" class="form-control"></textarea>
+				@			}
+				@			else if(x.type=="image"){
+								<img id="_${x.index!}" data-type="image"  style="padding:2px; border:1px solid #ccc;cursor:pointer;width:${x.width!'168px'};height:${x.height!'110px'};" name="${table!x.table}.${x.index!}" src="${x.src!}"  onclick="window.open('${x.src!}');"></img>
+				@			}
+				@			else if(func.like(x.type,"select_")){
+				@                var num=strutil.replace(x.type,"select_","");
+								<blade:select code="${num}" name="${table!x.table}.${x.index!}" value="${x.value!0}" type="dict" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(func.like(x.type,"combo_")){
+				@                var num=strutil.replace(x.type,"combo_","");
+								<blade:combo x="${x}" num="${num}" placeholder="${placeholder}"/>
+				@			}
+				@			else if(func.like(x.type,"dropdown_")){
+				@                var num=strutil.replace(x.type,"dropdown_","");
+								<blade:dropdown code="${num}" name="${table!x.table}.${x.index!}" value="${x.value!0}" type="dict" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="kindeditor"){
+								<blade:kindeditor x="${x}" />
+				@			}
+				@			else if(x.type=="selectDiy"){
+								<blade:select  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="diy" source="${x.source!}" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="dropdownDiy"){
+								<blade:dropdown  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="diy" source="${x.source!}" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="selectDept"){
+								<blade:select  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="dept" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="dropdownDept"){
+								<blade:dropdown  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="dept" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="selectRole"){
+								<blade:select  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="role" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="dropdownRole"){
+								<blade:dropdown  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="role" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="selectUser"){
+								<blade:select  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="user" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="dropdownUser"){
+								<blade:dropdown  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="user" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="checkbox"){
+								<blade:checkbox x="${x}" />
+				@			}
+				@			else if(x.type=="checkbox2"){
+								<blade:checkbox2 x="${x}" />
+				@			}
+				@			else if(x.type=="date"){
+								<blade:date x="${x}" />
+				@			}
+				@			else if(x.type=="laydate"){
+								<blade:laydate x="${x}"/>
+				@			}
+				@			else if(x.type=="imgupload"){
+								<blade:imgupload x="${x}" />
+				@			}
+				@			else if(x.type=="fileupload"){
+								<blade:fileupload x="${x}"  display="block"/>
+				@			}
+				@			else if(func.like(x.type,"opentree")){
+								<blade:opentree x="${x}" placeholder="${placeholder}"/>
+				@			}
+				@			else if(x.type=="span"){
+								<span class="form-control" style="border:0px;">${x.value!}</span>
+				@			}
+				@			else {
+								<input type="text" id="_${x.index!}" name="${table!x.table}.${x.index!}" ${x.required!} ${x.disabled!} value="${x.value!}" placeholder="${placeholder!}" class="form-control" />
+				@			}
+							</div>
+				@			if(x.length >= 5){
+						</div>
+				@			}
+	
+				@ 	if(!x.newline){
+					 </div>
+				@	}
+				@}
+			@}
+
+	<div class="space-4"></div>

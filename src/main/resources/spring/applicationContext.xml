@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.3.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.3.xsd ">
+
+	<!-- beetl主配置 -->
+	<bean id="beetlConfig" class="com.smallchill.core.beetl.MyBeetlGroupUtilConfiguration" init-method="init">
+		<property name="root" value="/" />
+	</bean>
+
+	<!-- beetl视图 -->
+	<bean id="viewResolver" class="org.beetl.ext.spring.BeetlSpringViewResolver">
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+	
+	<!-- 注册sqlmanager(主库) -->
+	<bean id="sqlManager" class="org.beetl.sql.ext.spring4.SqlManagerFactoryBean">
+		<property name="sqlLoader">
+			<bean class="org.beetl.sql.core.ClasspathLoader">
+				<property name="sqlRoot" value="/beetlsql"></property>
+			</bean>
+		</property>
+		<property name="nc">
+			<bean class="org.beetl.sql.core.DefaultNameConversion"></bean>
+		</property>
+		<property name="interceptors">
+			<list>
+				<bean class="com.smallchill.core.beetl.ReportInterceptor"></bean>
+			</list>
+		</property>
+		<property name="cs">
+			<bean class="org.beetl.sql.ext.spring4.BeetlSqlDataSource">
+				<property name="masterSource" ref="dataSource"></property>
+			</bean>
+		</property>
+		<property name="dbStyle">
+			<bean class="org.beetl.sql.core.db.MySqlStyle"></bean>
+		</property>
+	</bean>
+	
+
+	<!-- 工程启动监听配置 -->
+	<bean id="startupListener" class="com.smallchill.core.listener.StartupListener"></bean>
+	
+	<!-- 工程关闭监听配置 -->
+	<bean id="stopListener" class="com.smallchill.core.listener.StopListener"></bean>
+	
+	<!-- 全局application -->
+	<bean id="springAcaHolder" class="com.smallchill.core.toolbox.support.SpringAcaHolder"></bean>
+
+    <!-- blade框架自定义config -->
+    <bean id="bladeConfig" class="com.smallchill.core.config.BladeConfig">
+    	<!-- 注入自定义config -->
+		<property name="conf">
+			<bean class="com.smallchill.common.config.WebConfig"></bean>
+		</property>
+		<!-- 注入sqlManagerMap -->
+		<property name="sqlManager">
+			<map>
+				<entry key="master" value-ref="sqlManager" /> 
+			</map>
+		</property>
+	</bean>
+
+</beans>

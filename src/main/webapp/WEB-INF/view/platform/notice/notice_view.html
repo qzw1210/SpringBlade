@@ -1,0 +1,16 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _col=[
+		@			  {name:"通知标题",index:"f_vc_bt",type:"text",newline:true,length:8,required:"required"},
+		@			  {name:"公告类型",index:"dic_f_it_lx", type:"text",newline:true,length:3,required:"required"},
+		@			  {name:"通知时间",index:"f_dt_fbsj", type:"date",newline:false,length:3,required:"required"},
+		@			  {name:"通知内容",index:"f_tx_nr", type:"kindeditor",newline:true,length:8,required:"required"}
+		@		   ];
+		@ include("/common/_curd/_view.html",{"col":_col}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_close:"关闭"}) {}
+	</form>
+@}

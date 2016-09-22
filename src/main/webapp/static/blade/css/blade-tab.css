@@ -1,0 +1,19 @@
+
+.close-tab {
+    font-size: 10px;
+    position:absolute;
+    right: 5px;
+    top: 5px;
+   /*  padding-left: 25px; */
+    z-index: 100;
+    cursor: pointer;
+    color: #94A6B0;
+}
+
+.tmsp-pointer{
+	cursor:pointer;
+}
+
+.topbar-collapse {
+    float:right;
+}

@@ -1,0 +1,32 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form data-url="${ctxPath}/${code}/save" method="post" class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _table="tfw_role";
+		@ var _col=[		
+		@			  {name:"排序",index:"num",type:"text",newline:true,length:3},
+		@			  {name:"上级角色",index:"pid", type:"selectRole",value:pId!,newline:false,length:3},
+		@			  {name:"角色名称",index:"name", type:"text",newline:true,length:3,required:"required"},
+		@			  {name:"所在部门",index:"deptid", type:"selectDept",newline:false,length:3},
+		@			  {name:"别名",index:"tips", type:"text",newline:true,length:8,required:"required"}
+		@		   ];
+		@ include("/common/_curd/_add.html",{"col":_col,"table":_table}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_save:"新增",btn_close:"关闭"}) {}
+	</form>
+	
+	
+	<script type="text/javascript">
+		$(function(){
+			if("${pId!}"!=""&&"${num!}"!=""){
+				$("#_num").val("${num!}");
+				$("#_name").focus();
+			}
+			$("#btn_save").bind("click",function(){
+				setTimeout(function(){parent.initZtree();}, 499);
+			});
+		});
+	</script>
+	
+@}

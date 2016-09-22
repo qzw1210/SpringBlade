@@ -1,0 +1,127 @@
+   <div id="btn_backward" style="position:absolute;top:0px;right:174px;cursor:pointer;">
+  		 <ul class="nav ace-nav">
+			<li class="light-11">
+				<a href="javascript:tab_backward();" style="height:40px;min-width:30px;">
+					<i class="light-grey fa fa-backward"></i>
+				</a>
+			</li>
+		</ul>
+   </div>
+   <div	style="position:absolute;top:0px;right:145px;cursor:pointer;">
+  		 <ul class="nav ace-nav">
+			<li class="light-11">
+				<a href="javascript:tab_forward();" style="height:40px;min-width:30px;">
+					<i class="light-grey fa fa-forward"></i>
+				</a>
+			</li>
+		</ul>
+   </div>
+   <div	style="position:absolute;width:77px;top:0px;right:70px;cursor:pointer;">
+		<ul class="nav ace-nav">
+			<!-- #section:basics/navbar.user_menu -->
+			<li class="light-11">
+				<a style="height:40px;" data-toggle="dropdown" href="#" class="dropdown-toggle">
+					<span style="color:#999C9E;">
+						<small>操作选项</small>
+					</span>
+					<i class="light-grey fa fa-caret-down"></i>
+				</a>
+				<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-lighter dropdown-caret dropdown-close">
+					<li>
+						<a href="javascript:openPerson();">
+							<i class="light-grey ace-icon fa fa-user" style="width:15px;"></i>
+							<span style="color:#999C9E">个人信息编辑</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:editPassword();">
+							<i class="light-grey ace-icon fa fa-lock" style="width:15px;"></i>
+							<span style="color:#999C9E">个人密码修改</span>
+						</a>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<a href="javascript:showTab();">
+							<i class="light-grey ace-icon fa fa-location-arrow" style="width:15px;"></i>
+							<span style="color:#999C9E">定位当前选项卡</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:reloadTab();">
+							<i class="light-grey ace-icon fa fa-refresh" style="width:15px;"></i>
+							<span style="color:#999C9E">刷新当前选项卡</span>
+						</a>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<a href="javascript:closeThis();">
+							<i class="light-grey ace-icon fa fa-times" style="width:15px;"></i>
+							<span style="color:#999C9E">关闭当前选项卡</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:closeOther();">
+							<i class="light-grey ace-icon fa fa-times-circle-o" style="width:15px;"></i>
+							<span style="color:#999C9E">关闭其他选项卡</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:closeAll();">
+							<i class="light-grey ace-icon fa fa-times-circle" style="width:15px;"></i>
+							<span style="color:#999C9E">关闭全部选项卡</span>
+						</a>
+					</li>
+				</ul>
+			</li>
+		 </ul>
+   </div>
+   <div	style="position:absolute;top:0px;right:10px;cursor:pointer;">
+  		 <ul class="nav ace-nav">
+			<li class="light-11">
+				<a href="javascript:logout();" style="height:40px;min-width:61px;">
+					<i class="light-grey fa fa-sign-out"></i>
+					<span style="color:#999C9E;">
+						<small>退出</small>
+					</span>
+				</a>
+			</li>
+		</ul>
+   </div>
+   <script type="text/javascript">
+
+	   var searchGrid = function(){};
+	
+	   var openPerson = function(){
+			layer.open({
+		   	    type: 2,
+		   	    title:"${shiro.getUser().name}→个人信息编辑",
+		   	    area: ["800px", "400px"],
+		   	    fix: false, //不固定
+		   	    maxmin: true,
+		   	    content: "${ctxPath}/user/editMySelf/${shiro.getUser().id}"
+		   	});
+		};
+   
+		var editPassword = function(){
+			layer.open({
+        	    type: 2,
+        	    title:"${shiro.getUser().name}→密码修改",
+        	    area: ["250", "420px"],
+        	    fix: false, //不固定
+        	    maxmin: true,
+        	    content: "${ctxPath}/user/editPassword/${shiro.getUser().id}"
+        	});
+		};
+   
+   		var logout = function(){
+   			layer.confirm("是否确定退出？", {
+                icon: 3,
+                btn: ["确定", "取消"] //按钮
+            }, function () {
+                window.location.href="${ctxPath}/logout";
+            }, function () {
+                //layer.msg('已取消');
+            });
+   		}
+   </script>
+   

@@ -1,0 +1,213 @@
+	<div class="space-4"></div>
+	
+			<!-- 判断表单是否发生过更改的token -->
+			<input type="hidden" id="form_token" value="1"/>
+			<!-- 乐观锁控制 -->
+			<input type="hidden" id="_version" name="VERSION" value="0">
+			
+			@if(isEmpty(keys)){
+				<input type="hidden" id="_${key!'id'}" name="${table!}.${key!'id'}" value=""/>
+			@}
+			@else{
+				@for(k in keys){
+					<input type="hidden" id="${k.table!}_${k.key!'id'}" name="${k.table!}.${k.key!'id'}" value=""/>
+				@}
+			@}
+			@for(x in col){
+			 @ if(!isEmpty(x.title)){
+					<div class="page-header-form">
+						<h2>
+							${x.title!}
+						@if(!isEmpty(x.small)){
+							<small>
+								<i class="ace-icon fa fa-angle-double-right">
+									${x.small!}
+								</i>
+							</small>
+						@}
+						</h2>
+					
+					</div>
+			 @ }else{
+				@	var display = (func.like(x.type,"hidden")) ? "none" : "block";
+				@   var placeholder = (!isEmpty(x.placeholder)) ? x.placeholder : ("暂无"+x.name);
+				@	if(x.newline){
+						<div class="form-group" style="display:${display!}">
+				@	}
+							<label class="col-sm-2 control-label no-padding-right" > ${x.name!} </label>			
+							<div class="col-sm-${x.length!3}">
+				@			if(x.type=="text"||x.type=="number"||x.type=="tel"||x.type=="email"||x.type=="url"||x.type=="qq"||x.type=="unionpay"||x.type=="credit"||x.type=="idcard"){
+								<input type="${x.type!'text'}" id="_${x.index!}" name="${table!x.table}.${x.index!}" ${x.required!} ${x.disabled!} value="${x.value!}" placeholder="${placeholder!}" class="form-control" />
+				@			}
+				@			else if(x.type=="double"){
+								<input type="${x.type!'text'}" id="_${x.index!}" name="${table!x.table}.${x.index!}" ${x.required!} ${x.disabled!} value="${x.value!}" placeholder="${placeholder!}" class="form-control" />
+				@			}
+				@			else if(func.like(x.type,"hidden")){
+								<input type="${x.type!'hidden'}" id="_${x.index!}" name="${table!x.table}.${x.index!}"  value="${x.value!}" class="form-control" />
+				@			}
+				@			else if(x.type=="textarea"){
+								<textarea id="_${x.index!}" style="height:${x.height!'200px'}" name="${table!x.table}.${x.index!}" ${x.required!} ${x.disabled!} value="${x.value!}" placeholder="${placeholder!}" class="form-control"></textarea>
+				@			}
+				@			else if(x.type=="image"){
+								<img id="_${x.index!}" data-type="image" data-auto="${x.auto!}" style="padding:2px; border:1px solid #ccc;cursor:pointer;width:${x.width!'168px'};height:${x.height!'110px'};" name="${table!x.table}.${x.index!}" src="${x.src!}"></img>
+				@			}
+				@			else if(func.like(x.type,"select_")){
+				@                var num=strutil.replace(x.type,"select_","");
+								<blade:select code="${num}" name="${table!x.table}.${x.index!}" value="${x.value!0}" type="dict" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(func.like(x.type,"combo_")){
+				@                var num=strutil.replace(x.type,"combo_","");
+								<blade:combo x="${x}" num="${num}" placeholder="${placeholder}"/>
+				@			}
+				@			else if(func.like(x.type,"dropdown_")){
+				@                var num=strutil.replace(x.type,"dropdown_","");
+								<blade:dropdown code="${num}" name="${table!x.table}.${x.index!}" value="${x.value!0}" type="dict" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="kindeditor"){
+								<blade:kindeditor x="${x}" />
+				@			}
+				@			else if(x.type=="selectDiy"){
+								<blade:select  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="diy" source="${x.source!}" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="dropdownDiy"){
+								<blade:dropdown  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="diy" source="${x.source!}" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="selectDept"){
+								<blade:select  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="dept" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="dropdownDept"){
+								<blade:dropdown  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="dept" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="selectRole"){
+								<blade:select  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="role" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="dropdownRole"){
+								<blade:dropdown  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="role" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="selectUser"){
+								<blade:select  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="user" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="dropdownUser"){
+								<blade:dropdown  name="${table!x.table}.${x.index!}" value="${x.value!0}" type="user" tail="${x.tail!}" intercept="${x.intercept!}" required="${x.required!}"/>
+				@			}
+				@			else if(x.type=="checkbox"){
+								<blade:checkbox x="${x}" />
+				@			}
+				@			else if(x.type=="checkbox2"){
+								<blade:checkbox2 x="${x}" />
+				@			}
+				@			else if(x.type=="date"){
+								<blade:date x="${x}" />
+				@			}
+				@			else if(x.type=="laydate"){
+								<blade:laydate x="${x}"/>
+				@			}
+				@			else if(x.type=="imgupload"){
+								<blade:imgupload x="${x}" />
+				@			}
+				@			else if(x.type=="fileupload"){
+								<blade:fileupload x="${x}"  display="block"/>
+				@			}
+				@			else if(func.like(x.type,"opentree")){
+								<blade:opentree x="${x}" />
+				@			}
+				@			else if(x.type=="span"){
+								<span id="_${x.index!}" class="form-control" style="border:0px;">${x.value!}</span>
+				@			}
+				@			else {
+								<input type="text" id="_${x.index!}" name="${table!x.table}.${x.index!}" ${x.required!} ${x.disabled!} value="${x.value!}" placeholder="${placeholder!}" class="form-control" />
+				@			}
+							</div>
+				@			if(x.length>=5){
+						</div>
+				@			}
+	
+				@ 	if(!x.newline){
+					 </div>
+				@	}
+				@}
+			@ }
+			
+		<script	type="text/javascript">
+			$(function(){
+				var _model = ${model!"'error'"};
+				var _keys = switchBeetl();
+				if(_model == "error"){
+					layer_alert("读取数据失败!", "error");
+					return;
+				}
+				for(var x in _model){
+					var $x = $("#_" + x);
+					if($x.is("input") || $x.is("textarea")){
+						$x.bind("focus", function(){
+							var _name = $(this).attr("name").replace("token_", "");
+							$(this).attr("name", _name);
+							$("#form_token").val(1);
+						});
+					}
+					
+					if(_model[x] != null && $x.attr("data-type") == "image"){
+						var src = $("#_"+x).attr("data-auto") + _model[x];
+						$x.attr("src",src);
+						$x.bind("click",function(){
+							window.open($(this).attr("src"));
+						});
+					}
+					else if(_model[x] != null && $x.attr("data-type") == "imgupload"){
+						var id = _model[x];
+						$x.val(id);
+						initImgUpload(id, "edit");
+					}
+					else if(_model[x] != null && $x.attr("data-type") == "fileupload"){
+						var ids = _model[x];
+						$x.val(ids);
+						initFileUpload(ids, "edit");
+					}
+					else if(_model[x] != null && $x.attr("data-type") == "opentree"){
+						var ids = _model[x];
+						$x.val(ids);
+						initOpenTree(ids);
+					}
+					else if(_model[x] != null && $("#" + x + "_chb").attr("type") == "checkbox"){
+						if(_model[x] == "1"){
+							$("#"+x+"_chb").attr("checked","checked");
+							$x.val(_model[x]);
+						}
+						else{
+							$("#"+x+"_chb").removeAttr("checked");
+						}
+					}
+					else if($x.is("span")){
+						var _x = _model[x];
+						if(_x == null || _x == ""){
+							_x = "请选择";
+						}
+						$x.html(_x);
+					}
+					else if(_model[x] != null && $x.attr("type")!="autohidden"){
+						$x.val(_model[x]);
+					}
+				}
+				
+				for(var k in _keys){
+					var id = _keys[k].table + "_" + _keys[k].key;
+					$("#" + id).val(_model[id]);
+				}
+				
+			});
+				
+			//beetljson转json格式
+			function switchBeetl(){
+				var _keys=${keyList!"'true'"};
+				if(_keys=="true"){
+					_keys="${keys!}";
+					_keys=_keys.replace(/=/g,":").replace(/{/g,"{'").replace(/}/g,"'}").replace(/:/g,"':'").replace(/, /g,"','");				
+					_keys=_keys.replace(/}','{/g,"},{");
+					_keys=eval(_keys);
+				}
+				return _keys;
+			}
+		</script>
+			
+			
+	<div class="space-4"></div>

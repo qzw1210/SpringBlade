@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:p="http://www.springframework.org/schema/p" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.3.xsd
+    http://www.springframework.org/schema/mvc 
+    http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd ">
+
+	<!-- Default Servelt -->
+	<mvc:default-servlet-handler />
+	
+	<!-- enable aop -->
+	<aop:aspectj-autoproxy />
+
+	<!-- enable autowire -->
+	<context:annotation-config />
+
+	<!-- 启动包扫描功能，以便注册带有@Controller、@Service、@repository、@Component等注解的类成为spring的bean -->
+    <context:component-scan base-package="com.smallchill,org.jeecgframework.poi.excel.view" />
+
+	<!-- 启用 annotation-driven -->
+	<mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <ref bean="stringHttpMessageConverter" />  
+            <ref bean="fastJsonHttpMessageConverter" />  
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    
+    <bean id="stringHttpMessageConverter"  
+        class="org.springframework.http.converter.StringHttpMessageConverter">  
+        <constructor-arg value="UTF-8" index="0"></constructor-arg>
+        <property name="supportedMediaTypes">  
+            <list>  
+                <value>text/plain;charset=UTF-8</value>  
+            </list>  
+        </property>  
+    </bean>
+    
+    <bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value> 
+            </list>
+        </property>
+        <property name="fastJsonConfig">
+        	<bean class="com.alibaba.fastjson.support.config.FastJsonConfig">
+        		<property name="features">
+	        		<list>
+		                <value>AllowArbitraryCommas</value>
+		                <value>AllowUnQuotedFieldNames</value>
+		                <value>DisableCircularReferenceDetect</value>
+		            </list>
+        		</property>
+        		<property name="dateFormat" value="yyyy-MM-dd HH:mm:ss"></property>
+        	</bean>
+        </property>
+    </bean>
+
+ 	<!-- Bean解析器,级别高于默认解析器,寻找bean对象进行二次处理 -->
+    <bean id="beanNameViewResolver"
+          class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0">
+    </bean>
+    <!-- Excel 处理 根据用户输入进行对象处理 -->
+    <bean id="jeecgExcelView" class="org.jeecgframework.poi.excel.view.JeecgSingleExcelView" />
+    <bean id="jeecgTemplateExcelView" class="org.jeecgframework.poi.excel.view.JeecgTemplateExcelView" />
+    <bean id="jeecgTemplateWordView" class="org.jeecgframework.poi.excel.view.JeecgTemplateWordView" />
+    <bean id="jeecgMapExcelView" class="org.jeecgframework.poi.excel.view.JeecgMapExcelView" />
+
+    <!-- 文件上传 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 默认编码 -->
+        <property name="defaultEncoding" value="utf-8" /> 
+        <!-- 设置上传文件总大小限制 10G -->
+        <property name="maxUploadSize" value="10485760000"></property>
+        <!-- 内存中的最大值 -->
+        <property name="maxInMemorySize" value="40960" /> 
+    </bean>
+
+
+	<!-- 引入dapplicationContext配置文件 -->
+	<import resource="applicationContext.xml" />
+	
+	<!-- 引入dapplicationContext-shiro配置文件 -->
+	<import resource="applicationContext-shiro.xml" />
+	
+	<!-- 引入dapplicationContext-datasource配置文件 -->
+	<import resource="applicationContext-datasource.xml" />
+	
+	<!-- 引入applicationContext-task配置文件 -->
+	<!-- <import resource="applicationContext-task.xml" /> -->
+
+
+</beans>

@@ -1,0 +1,16 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form data-url="" method="post" class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _table="tfw_attach";
+		@ var _col=[
+		@			  {title:"文件上传",small:"文件入库"},
+		@			  {name:"缩略图上传",index:"attachUrl", type:"imgupload",newline:true,length:8,returnType:"id"}
+		@		   ];
+		@ include("/common/_curd/_add.html",{"col":_col,"table":_table}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_close:"关闭", auto_close:true}) {}
+	</form>
+	
+@}

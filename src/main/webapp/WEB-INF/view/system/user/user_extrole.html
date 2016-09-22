@@ -1,0 +1,174 @@
+@layout("/common/_curd/_container.html"){
+
+
+<script type="text/javascript">
+
+	$(function(){
+		//var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+		$("#btn_close").bind("click",function(){
+			//parent.layer.close(index);
+			window.top.autoClose("btn_user_extrole","user");
+		});
+		$("#btn_save").bind("click",function(){
+			var zTreeIn = $.fn.zTree.getZTreeObj("zTreeIn");
+			var nodesIn=zTreeIn.getCheckedNodes();
+			var idsIn="";
+			for (var i=0, l=nodesIn.length; i<l; i++) {
+				idsIn+=","+nodesIn[i].id;
+			}
+			idsIn=idsIn.substring(1);
+			
+			var zTreeOut = $.fn.zTree.getZTreeObj("zTreeOut");
+			var nodesOut=zTreeOut.getCheckedNodes();
+			var idsOut="";
+			for (var i=0, l=nodesOut.length; i<l; i++) {
+				idsOut+=","+nodesOut[i].id;
+			}
+			idsOut=idsOut.substring(1);
+			$.post("${ctxPath}/user/saveRoleExt",{userId:"${userId!}",idsIn:idsIn,idsOut:idsOut},function(data){
+				if (data.code === 0) {
+					layer.msg(data.message, {shift: 1});
+					setTimeout(function(){
+						//parent.layer.close(index);
+						window.top.autoClose("btn_user_extrole","user");
+					},500);
+					return false;
+				} else {
+					layer.msg(data.message, {shift: 6});
+					return false;
+				}
+			}, "json");
+		});
+		
+		initZtree();
+	});
+	
+	function initZtree(){
+		var setting = {
+				check: {
+					enable: true
+				},
+				data: {
+					simpleData: {
+						enable: true
+					}
+				}
+			};
+		var settingExt = {
+				check: {
+					enable: true,
+					chkboxType :{ "Y" : "s", "N" : "s" }
+				},
+				data: {
+					simpleData: {
+						enable: true
+					}
+				}
+			};
+		$.post("${ctxPath}/cache/menuTreeListByRoleId",{roleId:"${roleId!0}"},function(data){
+			if(data.code===0){
+				$.fn.zTree.init($("#zTree"), setting, data.data);
+			}
+			else{
+				layer_alert("数据加载失败", "error");
+			}
+			
+
+			$.post("${ctxPath}/user/menuTreeIn",{userId:"${userId!0}"},function(data){
+				if(data.code===0){
+					$.fn.zTree.init($("#zTreeIn"), setting,  data.data);
+				}
+				else{
+					layer_alert("数据加载失败", "error");
+				}
+				
+
+				$.post("${ctxPath}/user/menuTreeOut",{userId:"${userId!0}"},function(data){
+					if(data.code===0){
+						$.fn.zTree.init($("#zTreeOut"), settingExt,  data.data);
+					}
+					else{
+						layer_alert("数据加载失败", "error");
+					}
+				}, "json");
+				
+			}, "json");
+			
+		}, "json");
+
+	}
+	
+
+	
+	
+</script>
+
+
+	<!-- 配置grid -->
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="widget-box widget-color-blue2">
+				<div class="widget-header">
+					<h4 class="widget-title lighter smaller">所属角色权限集</h4>
+					<small class="widget-title lighter smaller">(${roleName!})</small>
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-main padding-8">
+						<ul id="zTree" class="ztree"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="widget-box widget-color-blue2">
+				<div class="widget-header">
+					<h4 class="widget-title lighter smaller">新增权限</h4>
+					<small class="widget-title lighter smaller">(${roleName!})</small>
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-main padding-8">
+						<ul id="zTreeIn" class="ztree"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="widget-box widget-color-blue2">
+				<div class="widget-header">
+					<h4 class="widget-title lighter smaller">剔除权限</h4>
+					<small class="widget-title lighter smaller">(${roleName!})</small>
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-main padding-8">
+						<ul id="zTreeOut" class="ztree"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="clearfix form-actions center">
+		<div class="col-md-offset-1 col-md-10">
+		  	<button class="btn btn-sm btn-info" type="button" id="btn_save">
+				<i class="ace-icon fa fa-check bigger-110"></i>
+				保存
+			</button>
+
+			&nbsp; &nbsp; &nbsp;
+			<button class="btn btn-sm" type="button" id="btn_close">
+				<i class="ace-icon fa fa-close bigger-110"></i>
+				关闭
+			</button>
+		</div>
+	</div>
+
+	
+	
+		<!-- 引入所需js -->
+	<link rel="stylesheet" href="${ctxPath}/static/zTree/css/zTreeStyle/zTreeStyle.css" />
+	<script src="${ctxPath}/static/zTree/js/jquery.ztree.core.js" type="text/javascript" ></script>
+	<script src="${ctxPath}/static/zTree/js/jquery.ztree.excheck.js" type="text/javascript"></script>
+@}	

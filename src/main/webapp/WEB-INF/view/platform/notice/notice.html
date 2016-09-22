@@ -1,0 +1,65 @@
+@ layout("/common/_curd/_container.html"){
+<script type="text/javascript">
+	var ctx="${ctxPath}";
+	var grid_selector = "#grid-table";
+	var pager_selector = "#grid-pager";
+	
+	$(function(){
+		initGrid();
+		initMenuBtn("btns","${code}");
+	});
+	
+	function initGrid(){
+		var grid_url = ctx+"/${code}/list";//查询列表接口
+		var _colnames=[ "序列","通知标题", "公告类型","发布时间"];
+		var _colmodel=[   {name:"F_IT_XL",index:"F_IT_XL", width:80,hidden:true},
+						  {name:"F_VC_BT",index:"F_VC_BT", width:100},
+						  {name:"DIC_F_IT_LX",index:"F_IT_LX", width:80},
+						  {name:"F_DT_FBSJ",index:"F_DT_FBSJ", width:80}
+						];
+		
+		jQuery(grid_selector).jqGrid({
+			url:grid_url,
+		    shrinkToFit:true,//适用于较少字段,响应式
+			colNames:_colnames,
+			colModel:_colmodel, 
+			jsonReader:{id:"F_IT_XL"},
+			pager : pager_selector,
+			ondblClickRow : page_add,
+			postData: {sort: "F_IT_XL", order: "desc"}
+		});
+		
+
+	}
+	
+	function page_add(){
+		$("#${code}_add").click();
+	}
+	
+</script>
+
+
+	<!-- 配置grid -->
+	<div class="row">
+		<div class="col-xs-12 tb-grid">
+			<!-- 配置查询 -->
+			@ var _col=[
+			@			  {name:"通知标题",index:"F_VC_BT", type:"text"},
+			@		      {name:"公告类型",index:"F_IT_LX_equal",type:"opentree_102"},
+			@			  {name:"发布时间(大于)",index:"F_DT_FBSJ_dategt", type:"date"},
+			@			  {name:"发布时间(小于)",index:"F_DT_FBSJ_datelt", type:"date"}
+			@		   ];
+			@ include("/common/_function/_search.html",{"col":_col}){}
+			<!-- 按钮组 -->
+			<div class="welljq well-sm" id="btns"></div>
+			<!-- grid -->
+			<table id="grid-table"></table>
+			<!-- 分页 -->
+			<div id="grid-pager"></div>
+
+		</div>
+	</div>
+	
+	<!-- 引入列表页所需js -->
+	@include("/common/_listscript.html"){}
+@}	

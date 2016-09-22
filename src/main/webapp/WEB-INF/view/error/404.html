@@ -1,0 +1,46 @@
+@layout("/common/_curd/_container.html",{title:"HTTP 404错误页"}){
+		<div class="error-container">
+			<div class="well">
+				<h1 class="grey lighter smaller">
+					<span class="blue bigger-125">
+						<i class="ace-icon fa fa-sitemap"></i>
+						HTTP 404
+					</span>
+					指定页面不存在
+				</h1>
+				<hr />
+				<h3 class="lighter smaller">系统没有发现你要找的页面</h3>
+				<div>
+
+					<div class="space"></div>
+					<h4 class="smaller">请尝试以下操作:</h4>
+
+					<ul class="list-unstyled spaced inline bigger-110 margin-15">
+						<li>
+							<i class="ace-icon fa fa-hand-o-right blue"></i>
+							检查地址是否输入错误
+						</li>
+
+						<li>
+							<i class="ace-icon fa fa-hand-o-right blue"></i>
+							检查是否处于联网状态
+						</li>
+
+						<li>
+							<i class="ace-icon fa fa-hand-o-right blue"></i>
+							联系管理员
+						</li>
+					</ul>
+				</div>
+
+				<hr />
+
+				<div class="center">
+					<a href="${ctxPath}/login" class="btn btn-grey">
+						<i class="ace-icon fa fa-arrow-left"></i>
+						返回登陆
+					</a>
+				</div>
+			</div>
+		</div>
+@}

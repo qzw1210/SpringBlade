@@ -1,0 +1,28 @@
+		<div class="row">
+		    <script type="text/javascript" src="${ctxPath}/static/assets/js/jquery.form.js"></script>
+			<form method="post" id="avatarForm" enctype="multipart/form-data">
+					<input type="file" style="display:none;" name="excel" id="importExcel">
+			</form>
+			<script type="text/javascript">
+				$(function() {
+					$("#importExcel").on("change", function() {
+						var index=appLoading();
+						$("#avatarForm").ajaxSubmit({
+							url : "${ctxPath}/${code}/importExcel",
+							type : "post",
+							dataType : "json",
+							success : function(data) {
+								window.location.href = "${ctxPath}/${code}";
+								if(data.code===0){
+									window.top.layer.alert(data.message, {icon: 1,title:"成功"});
+								}else{
+									window.top.layer.alert(data.message, {icon: 2,title:"发生错误"});
+								}
+							}
+						});
+			
+					});
+			
+				});
+			</script>
+		</div>

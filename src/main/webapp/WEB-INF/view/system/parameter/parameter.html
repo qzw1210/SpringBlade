@@ -1,0 +1,57 @@
+@layout("/common/_curd/_container.html"){
+<script type="text/javascript">
+	var ctx="${ctxPath}";
+	var grid_selector = "#grid-table";
+	var pager_selector = "#grid-pager";
+	
+	$(function(){
+		initGrid();
+		initMenuBtn("btns","${code}");
+	});
+	
+	function initGrid(){
+		var grid_url = ctx+"/${code}/list";//查询列表接口
+		var _colnames=[ "序列","参数编号", "参数名","参数值","备注","状态"];
+		var _colmodel=[   {name:"ID",index:"ID", width:80,hidden:true},
+						  {name:"CODE",index:"CODE", width:50},
+						  {name:"NAME",index:"NUM", width:80},
+						  {name:"PARA",index:"PID", width:80},
+						  {name:"TIPS",index:"TIPS", width:80},
+						  {name:"STATUSNAME",index:"STATUS", width:30}
+						];
+		
+		jQuery(grid_selector).jqGrid({
+			url:grid_url,
+		    shrinkToFit:true,//适用于较少字段,响应式
+			colNames:_colnames,
+			colModel:_colmodel, 
+			jsonReader:{id:"ID"},
+			pager : pager_selector,
+			postData: {sort: "id", order: "asc"}
+		});
+	}
+	
+</script>
+
+
+	<!-- 配置grid -->
+	<div class="row"> 
+		<div class="col-xs-12 tb-grid">
+			<!-- 配置查询 -->
+			@ var _col=[
+			@			  {name:"参数编号",index:"CODE", type:"text"},
+			@			  {name:"参数名",index:"NAME",type:"text"},
+			@			  {name:"参数值",index:"PARA", type:"text"}
+			@		   ];
+			@ include("/common/_function/_search.html",{"col":_col}){}
+			<!-- 按钮组 -->
+			<div class="welljq well-sm" id="btns"></div>
+			<!-- grid -->
+			<table id="grid-table"></table>
+			<!-- 分页 -->
+			<div id="grid-pager"></div>
+		</div>
+	</div>
+	<!-- 引入列表页所需js -->
+	@include("/common/_listscript.html"){}
+@}	

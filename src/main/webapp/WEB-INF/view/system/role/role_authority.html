@@ -1,0 +1,108 @@
+@layout("/common/_curd/_container.html"){
+
+
+<script type="text/javascript">
+
+	$(function(){
+		var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+		$("#btn_close").bind("click",function(){
+			parent.layer.close(index);
+		});
+		$("#btn_save").bind("click",function(){
+			var zTree = $.fn.zTree.getZTreeObj("zTree");
+			var nodes=zTree.getCheckedNodes();
+			var ids="";
+			for (var i=0, l=nodes.length; i<l; i++) {
+				ids+=","+nodes[i].id;
+			}
+			ids=ids.substring(1);
+			if(ids.length == 0){
+				layer.msg("权限不能为空", {shift: 6});
+				return false;
+			}
+			$.post("${ctxPath}/role/saveAuthority",{roleId:"${roleId!}",ids:ids},function(data){
+				if (data.code === 0) {
+					layer.msg(data.message, {shift: 1});
+					setTimeout(function(){
+						parent.layer.close(index);
+					},500);
+					return false;
+				} else {
+					layer.msg(data.message, {shift: 6});
+					return false;
+				}
+			}, "json");
+		});
+		
+		initZtree();
+	});
+	
+	function initZtree(){
+		var setting = {
+				check: {
+					enable: true
+				},
+				data: {
+					simpleData: {
+						enable: true
+					}
+				}
+			};
+		$.post("${ctxPath}/cache/menuTreeListByRoleId",{roleId:"${roleId!}"},function(data){
+			if(data.code===0){
+				$.fn.zTree.init($("#zTree"), setting, data.data);
+			}
+			else{
+				layer_alert("数据加载失败", "error");
+			}
+		}, "json");
+	}
+	
+
+	
+	
+</script>
+
+
+	<!-- 配置grid -->
+	<div class="row">
+		<div class="col-sm-1"></div>
+		<div class="col-sm-10">
+			<div class="widget-box widget-color-blue2">
+				<div class="widget-header">
+					<h4 class="widget-title lighter smaller">权限配置</h4>
+					<small class="widget-title lighter smaller">(${roleName!})</small>
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-main padding-8">
+						<ul id="zTree" class="ztree"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-1"></div>
+	</div>
+	
+	<div class="clearfix form-actions center">
+		<div class="col-md-offset-1 col-md-10">
+		  	<button class="btn btn-sm btn-info" type="button" id="btn_save">
+				<i class="ace-icon fa fa-check bigger-110"></i>
+				保存
+			</button>
+
+			&nbsp; &nbsp; &nbsp;
+			<button class="btn btn-sm" type="button" id="btn_close">
+				<i class="ace-icon fa fa-close bigger-110"></i>
+				关闭
+			</button>
+		</div>
+	</div>
+
+	
+	
+		<!-- 引入所需js -->
+	<link rel="stylesheet" href="${ctxPath}/static/zTree/css/zTreeStyle/zTreeStyle.css" />
+	<script src="${ctxPath}/static/zTree/js/jquery.ztree.core.js" type="text/javascript" ></script>
+	<script src="${ctxPath}/static/zTree/js/jquery.ztree.excheck.js" type="text/javascript"></script>
+@}	

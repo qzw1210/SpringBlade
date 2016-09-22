@@ -1,0 +1,18 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _col=[
+		@			  {name:"模块名称",index:"name",type:"text",newline:true,length:8,required:"required"},
+		@			  {name:"物理路径",index:"realpath", type:"text",newline:true,length:8,required:"required"},
+		@			  {name:"包名",index:"packagename", type:"text",newline:true,length:8,required:"required"},
+		@			  {name:"实体名",index:"modelname",  type:"text",newline:true,length:8,required:"required"},
+		@			  {name:"表名",index:"tablename", type:"text",newline:true,length:3,required:"required"},
+		@			  {name:"主键名",index:"pkname", type:"text",newline:false,height:"170px",length:3,required:"required"}
+		@		   ];
+		@ include("/common/_curd/_view.html",{"col":_col}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_close:"关闭"}) {}
+	</form>
+@}

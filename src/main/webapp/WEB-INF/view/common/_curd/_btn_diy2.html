@@ -1,0 +1,19 @@
+		<div class="clearfix form-actions center" style="margin-top:15px;margin-bottom:5px;">
+			<div class="col-md-offset-1 col-md-10">
+			@if(!isEmpty(btn_save)){
+			  	<button class="btn btn-info" type="submit" id="btn_save">
+					<i class="ace-icon fa fa-check bigger-110"></i>
+					${btn_save!}
+				</button>
+			@}
+
+			@if(!isEmpty(btn_close)){
+				&nbsp; &nbsp; &nbsp;
+				<button class="btn" type="button" id="btn_close">
+					<i class="ace-icon fa fa-close bigger-110"></i>
+					${btn_close!}
+				</button>
+			@}
+			</div>
+		</div>
+		<script src="${ctxPath}/static/validate/jquery-html5Validate.js"></script>

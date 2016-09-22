@@ -1,0 +1,40 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form data-url="${ctxPath}/${code}/save" method="post" class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _table="tfw_menu";
+		@ var _col=[
+		@			  {name:"菜单名称",index:"name",type:"text",newline:true,length:3,required:"required"},
+		@			  {name:"接口地址",index:"url",type:"text",newline:false,length:3},
+		@			  {name:"菜单编号",index:"code",type:"text",newline:true,length:3,required:"required"},
+		@			  {name:"菜单父编号",index:"pcode",type:"text",newline:false,length:3,required:"required"},
+		@			  {name:"排序",index:"num",type:"number",newline:true,length:3,required:"required"},
+		@			  {name:"按钮别名",index:"alias",type:"text",newline:false,length:3},
+		@			  {name:"层级",index:"levels",type:"number",value:"1",newline:true,length:3,required:"required min=1"},
+		@			  {name:"新TAB",index:"isopen",type:"checkbox",newline:false,length:3},
+		@			  {name:"窗口大小",index:"tips",type:"text",value:"800*520",newline:true,length:3},
+		@			  {name:"图标样式",index:"icon",type:"text",newline:false,length:3,required:"required"}
+		@		   ];
+		@ include("/common/_curd/_add.html",{"col":_col,"table":_table}){}
+	
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_save:"新增",btn_close:"关闭"}) {}
+
+	</form>
+	<script type="text/javascript">
+		$(function(){
+			if("${PCODE!}"!=""&&"${LEVELS!}"!=""&&"${NUM!}"!=""){
+				$("#_pcode").val("${PCODE!}");
+				$("#_levels").val("${LEVELS!}");
+				$("#_num").val("${NUM!}");
+			}
+			
+			$("#btn_save").bind("click",function(){
+				setTimeout(function(){parent.initZtree();}, 499);
+			});
+			
+		});
+	</script>
+	
+	@ include("/system/menu/_widget/_menu_icon.html") {}
+@}

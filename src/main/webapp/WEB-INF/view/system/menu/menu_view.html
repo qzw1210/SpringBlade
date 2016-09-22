@@ -1,0 +1,22 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _col=[
+		@			  {name:"菜单名称",index:"name",type:"text",newline:true,length:3},
+		@			  {name:"接口地址",index:"url",type:"text",newline:false,length:3},
+		@			  {name:"菜单编号",index:"code",type:"text",newline:true,length:3},
+		@			  {name:"菜单父编号",index:"pcode",type:"text",newline:false,length:3},
+		@			  {name:"排序",index:"num",type:"number",newline:true,length:3},
+		@			  {name:"按钮别名",index:"alias",type:"text",newline:false,length:3},
+		@			  {name:"层级",index:"levels",type:"number",newline:true,length:3},
+		@			  {name:"新TAB",index:"isopen",type:"checkbox",newline:false,length:3},
+		@			  {name:"窗口大小",index:"tips",type:"text",newline:true,length:3},
+		@			  {name:"图标样式",index:"icon",type:"text",newline:false,length:3}
+		@		   ];
+		@ include("/common/_curd/_view.html",{"col":_col}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_close:"关闭"}) {}
+	</form>
+@}

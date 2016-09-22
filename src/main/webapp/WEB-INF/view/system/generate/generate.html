@@ -1,0 +1,91 @@
+@layout("/common/_curd/_container.html"){
+<script type="text/javascript">
+	var ctx="${ctxPath}";
+	var grid_selector = "#grid-table";
+	var pager_selector = "#grid-pager";
+	
+	$(function(){
+		initGrid();
+		initMenuBtn("btns","${code}");
+	});
+	
+	function initGrid(){
+		var grid_url = ctx+"/${code}/list/";//查询列表接口
+		var _colnames=[ "序列","模块名称", "物理路径", "包名","实体名","表名","主键名"];
+		var _colmodel=[   {name:"ID",index:"ID", width:80,hidden:true},
+						  {name:"NAME",index:"NAME", width:120},
+						  {name:"REALPATH",index:"REALPATH", width:200},
+						  {name:"PACKAGENAME",index:"PACKAGENAME", width:150},
+						  {name:"MODELNAME",index:"MODELNAME", width:60},
+						  {name:"TABLENAME",index:"TABLENAME", width:50},
+						  {name:"PKNAME",index:"PKNAME", width:50}
+						];
+		
+		jQuery(grid_selector).jqGrid({
+			url:grid_url,
+		    shrinkToFit:true,//适用于较少字段,响应式
+			colNames:_colnames,
+			colModel:_colmodel, 
+			jsonReader:{id:"ID"},
+			pager : pager_selector,
+			postData: {sort: "id", order: "desc"}
+		});
+		
+
+	}
+	
+	
+	function btnCallBack(id){
+		if (id == "generate_gencode") {
+			var ids = getGridXls().join(",");
+	        var rows = getGridXls().length;
+	        if (rows == 0) {
+                layer_alert("请选择一条数据!", "warn");
+                return;
+            }
+            var _this = this;
+            var url= _this.url;
+            layer.confirm("是否确定生成代码？", {
+                icon: 3,
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                $.post("${ctxPath}/${code}/code", { ids: ids }, function (data) {
+                    if (data.code === 0) {
+                        layer_alert(data.message, "success");
+                    } else {
+                    	layer_post(data);
+                    }
+                }, "json");
+
+            }, function () {
+                //layer.msg('已取消');
+            });
+            return;
+		}
+	}
+	
+</script>
+
+
+	<!-- 配置grid -->
+	<div class="row">
+		<div class="col-xs-12 tb-grid">
+			<!-- 配置查询 -->
+			@ var _col=[
+			@			  {name:"包名",index:"PACKAGENAME", type:"text"},
+			@		      {name:"实体名",index:"MODELNAME",type:"text"},
+			@			  {name:"表名",index:"TABLENAME", type:"text"}
+			@		   ];
+			@ include("/common/_function/_search.html",{"col":_col}){}
+			<!-- 按钮组 -->
+			<div class="welljq well-sm" id="btns"></div>
+			<!-- grid -->
+			<table id="grid-table"></table>
+			<!-- 分页 -->
+			<div id="grid-pager"></div>
+		</div>
+	</div>
+	
+	<!-- 引入列表页所需js -->
+	@include("/common/_listscript.html"){}
+@}	

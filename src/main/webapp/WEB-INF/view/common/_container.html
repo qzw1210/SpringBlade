@@ -1,0 +1,28 @@
+@ include("/common/_header.html") {} 
+		<!-- /section:basics/navbar.layout -->
+		<div class="main-container" id="main-container">
+			@ include("/common/_sidebar.html") {}
+			<!-- /section:basics/sidebar -->
+			<div class="main-content">
+				<div class="main-content-inner">
+					<!-- #section:basics/content.breadcrumbs -->
+					<div class="breadcrumbs" id="bread_left">
+		               	@include("/common/_tab.html"){}
+					</div>
+					
+					<!-- Tab tools -->
+					<div class="breadcrumbs" id="bread_right">
+					 	@include("/common/_tabtoolbar.html"){}
+					</div>
+				</div><!-- /.main-content -->
+					
+   				 <!-- Tab panes -->
+                <div id="tmsp_tab_content" class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">${layoutContent}</div>                    
+                </div>
+			</div>
+		@include("/common/_footer.html"){}
+		</div><!-- /.main-container -->
+	  @ include("/common/_acescript.html") {}
+	</body>
+</html>

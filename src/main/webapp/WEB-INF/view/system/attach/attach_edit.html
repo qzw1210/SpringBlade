@@ -1,0 +1,20 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form data-url="${ctxPath}/${code}/update" method="post" class="form-horizontal" role="form">	
+		<!-- 表单 -->
+		@ var _table="tfw_attach";
+		@ var _key="id";
+		@ var _col=[
+		@			  {name:"编号",index:"code", type:"text",newline:true,length:3,required:"required"},
+		@			  {name:"名称",index:"name", type:"text",newline:false,length:3,required:"required"},
+		@			  {name:"地址",index:"url", type:"text",newline:true,length:8,required:"required",disabled:"disabled"},
+		@			  {name:"状态",index:"status", type:"hidden",newline:true,value:"1",length:8},
+		@			  {name:"创建人",index:"creater", type:"hidden",newline:true,value:shiro.getUser().id,length:8},
+		@			  {name:"创建时间",index:"createtime", type:"hidden",newline:true,value:func.getTime(),length:8}
+		@		   ]; 
+		@ include("/common/_curd/_edit.html",{"col":_col,"table":_table,"key":_key}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_save:"修改",btn_close:"关闭"}) {}	
+	</form>
+@}

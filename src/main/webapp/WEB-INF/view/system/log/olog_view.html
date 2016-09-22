@@ -1,0 +1,19 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form class="form-horizontal" role="form">
+		<!-- 表单 -->
+		@ var _col=[
+		@			  {name:"日志名称",index:"logname",type:"text",newline:true,length:8,required:"required"},
+		@			  {name:"操作人",index:"userName", type:"text",newline:true,length:3,required:"required"},
+		@			  {name:"操作时间",index:"createtime",  type:"text",newline:false,length:3,required:"required"},
+		@			  {name:"是否成功",index:"succeedName", type:"text",newline:true,length:8,required:"required"},
+		@//			  {name:"接口类",index:"classname", type:"text",newline:true,length:8,required:"required"},
+		@//			  {name:"信息",index:"message", type:"textarea",height:"120px",newline:true,length:8},
+		@			  {name:"方法参数",index:"method", type:"textarea",newline:true,height:"170px",length:8,required:"required"}
+		@		   ];
+		@ include("/common/_curd/_view.html",{"col":_col}){}
+		
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_close:"关闭"}) {}
+	</form>
+@}

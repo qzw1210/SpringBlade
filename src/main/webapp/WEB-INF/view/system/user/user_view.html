@@ -1,0 +1,66 @@
+@layout("/common/_curd/_container.html"){
+	<!-- PAGE CONTENT BEGINS -->
+	<form class="form-horizontal" role="form">
+		<div class="space-4"></div>
+		<!-- #section:elements.form -->
+		<div class="form-group">
+			<input type="hidden" name="TFW_USER.ID" value="${user.id!}"/>
+			<label class="col-sm-2 control-label no-padding-right" > 账户 </label>
+
+			<div class="col-sm-3">
+				<input type="text" name="TFW_USER.ACCOUNT" disabled value="${user.account!}" placeholder="暂无账户" class="form-control" />
+			</div>
+			
+			<label class="col-sm-2 control-label no-padding-right" > 姓名 </label>
+			<div class="col-sm-3">
+				<input type="text" name="TFW_USER.NAME" disabled value="${user.name!}" placeholder="暂无姓名" class="form-control" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right" > 性别 </label>
+			<div class="col-sm-3">
+				<input type="text" name="TFW_USER.SEX" disabled value="${user.sexName!}" placeholder="暂无性别" class="form-control" />
+			</div>
+			
+			<label class="col-sm-2 control-label no-padding-right" > 出生日期 </label>
+
+			<div class="col-sm-3">
+				<input type="text" id="birthday" name="TFW_USER.BIRTHDAY" disabled value="${user.birthday!}" placeholder="暂无日期" data-date-format="yyyy-mm-dd" class="form-control" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right" > 角色 </label>
+			<div class="col-sm-3">
+				<input type="text" name="TFW_USER.ROLEID" disabled value="${user.roleName!}" placeholder="暂无角色" class="form-control" />
+			</div>
+			
+			<label class="col-sm-2 control-label no-padding-right" > 部门</label>
+
+			<div class="col-sm-3">
+				<input type="text" name="TFW_USER.DEPTID" disabled value="${user.deptName!}" placeholder="暂无部门" class="form-control" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label no-padding-right" > 邮箱 </label>
+
+			<div class="col-sm-3">
+				<input type="text"   name="TFW_USER.EMAIL" disabled value="${user.email!}" placeholder="暂无邮箱" class="form-control" />
+			</div>
+			
+			<label class="col-sm-2 control-label no-padding-right" > 电话 </label>
+			<div class="col-sm-3">
+				<input type="text" name="TFW_USER.PHONE" disabled value="${user.phone!}" placeholder="暂无电话" class="form-control" />
+			</div>
+		</div>
+		
+
+		
+		
+		<div class="space-4"></div>
+		<!-- 按钮 -->
+		@ include("/common/_curd/_btn.html",{btn_close:"关闭"}) {}
+</form>
+@}

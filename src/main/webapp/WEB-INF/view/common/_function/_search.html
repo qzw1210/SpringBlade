@@ -1,0 +1,189 @@
+
+
+		<div class="wellsearch well-sm" id="searchfield">
+			<div class="col-xs-8 input-group">
+			
+			<!-- 简单查询第一组 -->
+				<div class="input-group-btn">
+					<button data-toggle="dropdown"
+						class="btn btn-sx btn-white dropdown-toggle">
+						<span id="searchthis1">请选择</span> 
+						<i class="ace-icon fa fa-angle-down icon-on-right"></i>
+					</button>
+
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#" onclick="changethis('','请选择','',1)">
+								清空
+							</a>
+						</li> 
+						<li class="divider" style="margin-top:1px;"></li>
+						@for(x in col){
+							<li>
+								<a href="#" onclick="changethis('${x.index!}','${x.name!}','${x.type!}',1)">
+									${x.name!}
+								</a>
+							</li> 
+						@}			
+					</ul>
+				</div>
+				<div id="divinput1">
+					<input type="text"  id="inputs1" class="form-control" style="margin-left:-3px;"/>
+				</div>
+				<input type="hidden" id="hides1"/>
+				
+				<span class="input-group-btn"></span>
+
+			<!-- 简单查询第二组 -->
+				<div class="input-group-btn">
+					<button data-toggle="dropdown"
+						class="btn btn-sx btn-white dropdown-toggle">
+						<span id="searchthis2">请选择</span> 
+						<i class="ace-icon fa fa-angle-down icon-on-right"></i>
+					</button>
+
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#" onclick="changethis('','请选择','',2)">
+								清空
+							</a>
+						</li> 
+						<li class="divider" style="margin-top:1px;"></li>
+						@for(x in col){
+							<li>
+								<a href="#" onclick="changethis('${x.index!}_2nd','${x.name!}','${x.type!}',2)">
+									${x.name!}
+								</a>
+							</li> 
+						@}
+					</ul>
+				</div>
+				<div id="divinput2">
+					<input type="text"  id="inputs2" class="form-control" style="margin-left:-3px;"/>
+				</div>
+				<input type="hidden" id="hides2"/>
+				
+				<span class="input-group-btn"></span>
+
+			<!-- 简单查询按钮 -->
+				<div class="input-group-btn">
+					<button class="btn btn-sx btn-white" id="gotoSearch">查询</button>
+					<button class="btn btn-sx btn-white" id="gotoReset">重置</button>
+				</div>
+			</div>
+
+		</div>
+
+
+	<script type="text/javascript">
+		var isAutoPage = true;
+		$(function () {
+		    $("#gotoSearch").bind("click", function () {
+		        var key1 = $("#hides1").val();
+		        var key2 = $("#hides2").val();
+		        var value1 = $("#inputs1").val();
+		        var value2 = $("#inputs2").val();
+		        var filter = "";
+		        if (typeof (_filter) != "undefined") {
+		            filter = _filter;
+		        }
+		        var where = (BladeTool.isEmpty(filter)) ? "" : filter.replace("}", "");
+		        if (BladeTool.isNotEmpty(key1) && BladeTool.isNotEmpty(value1)) {
+		            where += (BladeTool.isEmpty(filter) ? "{" : ",") + "\"" + key1 + "\":\"" + value1 + "\"";
+		        }
+		        if (BladeTool.isNotEmpty(key2) && BladeTool.isNotEmpty(value2)) {
+		            where += (BladeTool.isEmpty(where) ? "{" : ",") + "\"" + key2 + "\":\"" + value2 + "\"";
+		        }
+		        if (BladeTool.isNotEmpty(where) && BladeTool.isEmpty(exwhere)) {
+		            where += "}";
+		        }
+		        else if (BladeTool.isNotEmpty(where) && BladeTool.isNotEmpty(exwhere)) {
+		            where += exwhere.replace("{", ",");
+		        }
+		        else {
+		            where = BladeTool.format(exwhere);
+		        }
+		        where = (BladeTool.isEmpty(key1) && BladeTool.isEmpty(key2) && BladeTool.isEmpty(where)) ? "" : encodeURI(where);
+
+		        var pageNum = $jqGrid.getGridParam('page');
+		        $jqGrid.jqGrid("setGridParam", { postData: { where: where }, page: (isAutoPage) ? pageNum : 1 }).trigger("reloadGrid");
+		    });
+		
+		    $("#gotoReset").bind("click", function () {
+		        changethis("", "请选择", "", 1);
+		        changethis("", "请选择", "", 2);
+		        btn_stage.bind(toolbar);
+		        reloadGrid();
+		    });
+		});
+		
+		function changethis(key, value, type, num) {
+			isAutoPage = false;
+		    if (BladeTool.isEmpty(key)) {
+		        resetInput(num);
+		    }
+		    if (type.indexOf("select_") >= 0) {
+		        var code = type.replace("select_", "");
+		        $.post("${ctxPath}/cache/getSelect", { code: code, num: num }, function (data) {
+		            if (data.code === 0) {
+		                $("#divinput" + num).html(data.data);
+		            }
+		        }, "json");
+		    }
+		    else if (type == "selectDept") {
+		        $.post("${ctxPath}/cache/getDeptSelect", { num: num }, function (data) {
+		            if (data.code === 0) {
+		                $("#divinput" + num).html(data.data);
+		            }
+		        }, "json");
+		    }
+		    else if (type == "selectUser") {
+		        $.post("${ctxPath}/cache/getUserSelect", { num: num }, function (data) {
+		            if (data.code === 0) {
+		                $("#divinput" + num).html(data.data);
+		            }
+		        }, "json");
+		    }
+		    else if (type == "selectRole") {
+		        $.post("${ctxPath}/cache/getRoleSelect", { num: num }, function (data) {
+		            if (data.code === 0) {
+		                $("#divinput" + num).html(data.data);
+		            }
+		        }, "json");
+		    }
+		    else if (type.indexOf("opentree_") >= 0) {
+		        var html = "<input type=\"text\"  id=\"inputs" + num + "_INPUT\" class=\"form-control\" style=\"margin-left:-3px;\"/>";
+		        html += "<input type=\"hidden\"  id=\"inputs" + num + "\" />";
+                $("#divinput" + num).html(html);
+                
+		        $("#inputs" + num + "_INPUT").bind("click",function(){
+		        	openTree(type,"inputs" + num,"请选择");
+		        });
+		    }
+		    else if (type == "date") {
+		    	$("#divinput" + num).html("<input type=\"datetime-local\"  id=\"inputs" + num + "\" class=\"form-control\" style=\"margin-left:-3px;\"/>");
+		    }
+		    else if (type == "text") {
+		        resetInput(num);
+		    }
+		    $("#hides" + num).val(key);
+		    $("#searchthis" + num).html(value);
+		}
+		
+		
+		function resetInput(num) {
+		    $("#divinput" + num).html("<input type=\"text\"  id=\"inputs" + num + "\" class=\"form-control\" style=\"margin-left:-3px;\"/>");
+		}
+		
+		function openTree(type,index,name){
+			layer.open({
+        	    type: 2,
+        	    title:"树形选择",
+        	    area: ["250", "420px"],
+        	    fix: false, //不固定
+        	    maxmin: true,
+        	    content: "${ctxPath}/ztree/open/"+type+"/"+index+"/"+name+"/0/radio/0"
+        	});
+		}
+		
+	</script>
